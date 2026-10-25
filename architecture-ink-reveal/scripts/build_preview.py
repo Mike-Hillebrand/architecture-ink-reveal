@@ -93,7 +93,9 @@ def main():
     if ground_y is None:
         # Bodenlinien liegen in der Praxis zwischen ca. 70 und 90 % der Höhe; das Band ist bewusst breiter.
         band = np.arange(int(h*.45), min(h, int(h*.97)+1))
-        dark = gray[band] < 120
+        # Je drei Zeilen zusammen werten: Gestippelte Strand- oder Wasserkanten sind keine durchgehende Federlinie.
+        rows = gray < 120
+        dark = rows[band] | rows[np.maximum(band-1, 0)] | rows[np.minimum(band+1, h-1)]
         # Gebäudekanten sind oft lang, überspannen aber selten fast die ganze Bildbreite wie eine Bodenlinie.
         span = np.where(dark.any(1), w-1-np.argmax(dark[:, ::-1], 1)-np.argmax(dark, 1), 0)
         lengths = np.where(span >= .85*w, dark.sum(1), 0)
@@ -122,7 +124,9 @@ def main():
               'ground': ground_y, 'ground_source': ground_source, 'lines': len(lines),
               'vertical_lines': sum(1 for p in lines if p[0] == p[2]), 'vertical_min': vertical_min,
               'alpha_range': [int(rgba[:, :, 3].min()), int(rgba[:, :, 3].max())]}
-    (assets / 'report.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
+    # Lokale Pfade nur auf der Konsole ausgeben, nicht in die veröffentlichbare Vorschau schreiben.
+    report = {k: v for k, v in result.items() if k != 'output'}
+    (assets / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
     print(json.dumps(result, ensure_ascii=False))
 
 
