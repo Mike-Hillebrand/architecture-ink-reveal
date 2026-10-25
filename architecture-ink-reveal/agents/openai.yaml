@@ -1,0 +1,4 @@
+interface:
+  display_name: "Architektur in Tusche"
+  short_description: "Architektur abfragen, zeichnen und im Browser animieren"
+  default_prompt: "Nutze $architecture-ink-reveal und frage vollständig ab, welches Bauwerk ich als animierte Tuschezeichnung umsetzen möchte."

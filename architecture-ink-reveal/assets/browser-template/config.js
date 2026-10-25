@@ -1,0 +1,1 @@
+window.ARCHITECTURE_CONFIG = {title:'Architektur, Linie für Linie.',subtitle:'Erst die Kontur. Dann Tiefe, Schatten und Struktur.',duration:12000,mode:'both',direction:'top-down',loop:false,autoplay:true,background:'#f5f2e9',ink:'#111111'};

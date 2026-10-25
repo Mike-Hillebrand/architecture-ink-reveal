@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#eeece5">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23eeece5' d='M0 0h32v32H0z'/%3E%3Cpath fill='none' stroke='%23111' stroke-width='2' d='M4 25h24M7 25V11h18v14M13 25V6h6v19'/%3E%3C/svg%3E">
+  <title>Architektur in Tusche</title><link rel="stylesheet" href="style.css">
+</head>
+<body><main>
+  <header><a class="wordmark" href="./">STUDIE <span>001</span></a><span class="edition">ARCHITEKTUR · TUSCHE · PAPIER</span></header>
+  <section class="intro"><div><p class="eyebrow">EINE ARCHITEKTURZEICHNUNG ENTSTEHT</p><h1 id="title">Architektur, Linie für Linie.</h1></div><p class="description" id="subtitle"></p></section>
+  <figure aria-label="Animierte Architekturzeichnung">
+    <div class="sheet" id="sheet" aria-busy="true"><canvas id="drawing" role="img" aria-label="Tuschezeichnung"></canvas><svg id="contours" aria-hidden="true"></svg><span id="loading">Zeichnung wird vorbereitet …</span></div>
+    <figcaption><span>01 / ARCHITEKTURSTUDIE</span><span id="dimensions"></span></figcaption>
+  </figure>
+  <section class="controls" aria-label="Wiedergabe steuern">
+    <button id="play" disabled aria-label="Animation abspielen">Abspielen <span aria-hidden="true">▷</span></button>
+    <button id="replay" disabled aria-label="Animation von vorn abspielen" title="Neu abspielen">↺</button>
+    <div class="timeline"><label class="sr-only" for="progress">Animationsfortschritt</label><input id="progress" type="range" min="0" max="1000" value="0" step="1" disabled><div class="ticks"><span id="start-phase">KONTUR</span><span id="middle-phase">TUSCHE</span><span>FERTIG</span></div></div>
+    <output id="time" for="progress"></output><button id="loop" aria-pressed="false">Loop</button>
+  </section>
+  <p class="error" id="error" hidden></p>
+  <footer><span>ARCHITEKTUR IN BEWEGUNG</span><span id="phase" aria-live="polite"></span></footer>
+</main><script src="config.js"></script><script src="app.js"></script></body>
+</html>
