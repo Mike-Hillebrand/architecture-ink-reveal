@@ -70,6 +70,7 @@ Den Ordner `architecture-ink-reveal/` in dein Codex-Skills-Verzeichnis kopieren.
 | `--loop` | Endlosschleife |
 | `--ground-y 759` | Bodenlinie von Hand setzen, wenn sie nicht erkannt wird |
 | `--vertical-min 30` | Mindestlänge senkrechter Linien (Standard: 3 % der Bildhöhe) |
+| `--extra-lines kanten.json` | Schräge Kanten wie Stützen oder Dachschrägen als `[[x1,y1,x2,y2], …]` ergänzen |
 
 ## Als Video für Reels / TikTok
 
@@ -82,7 +83,7 @@ Das Skript nimmt die Animation Frame für Frame auf. Den Schnitt auf 9:16 mit ff
 
 ## Grenzen
 
-- Die Linienerkennung findet waagrechte und senkrechte Kanten. Kurven, schräge Stützen und Bäume kommen über die Tusche-Ebene, nicht als Vektor.
+- Die automatische Linienerkennung findet waagrechte und senkrechte Kanten. Schräge Kanten kommen über `--extra-lines` dazu; Kurven und Bäume erscheinen über die Tusche-Ebene.
 - Eine Browseranimation ist kein Video. Für Reels/TikTok `capture_frames.js` und ffmpeg nutzen (siehe oben).
 - Bildgeneratoren halten „streng orthogonal“ nicht immer ein. Das Ergebnis immer ansehen.
 

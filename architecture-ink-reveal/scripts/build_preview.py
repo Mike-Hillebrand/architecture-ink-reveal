@@ -48,6 +48,7 @@ def main():
     parser.add_argument('--horizontal-min', type=int, default=70)
     parser.add_argument('--vertical-min', type=int, help='Standard: 3 %% der Bildhöhe, mindestens 24 px')
     parser.add_argument('--ground-y', type=int)
+    parser.add_argument('--extra-lines', type=Path, help='JSON-Liste [[x1,y1,x2,y2], …] für schräge Kanten in Quellpixeln')
     args = parser.parse_args()
     if not (0.5 <= args.duration <= 600):
         parser.error('--duration muss zwischen 0.5 und 600 Sekunden liegen.')
@@ -105,6 +106,12 @@ def main():
     vertical_min = args.vertical_min or max(24, round(h*.03))
     lines = extract(binary, args.horizontal_min) + extract(binary.T, vertical_min, True)
     lines = [list(p) for p in lines if not (ground_y is not None and p[1] == p[3] and abs(p[1]-ground_y) < 5)]
+    extra = []
+    if args.extra_lines:
+        extra = json.loads(args.extra_lines.expanduser().read_text(encoding='utf-8'))
+        if not all(len(p) == 4 and 0 <= p[0] < w and 0 <= p[2] < w and 0 <= p[1] < h and 0 <= p[3] < h for p in extra):
+            parser.error('--extra-lines: jede Linie braucht [x1,y1,x2,y2] innerhalb des Bildes.')
+        lines += [[int(v) for v in p] for p in extra]
     lines.sort(key=lambda p: (min(p[1], p[3]), p[0]))
     metadata = {'w': w, 'h': h, 'v': hashlib.sha256(source.read_bytes()).hexdigest()[:8],
                 'ground': [0, ground_y, w-1, ground_y] if ground_y is not None else None,
@@ -123,6 +130,7 @@ def main():
     result = {'output': str(output), 'width': w, 'height': h, 'paper': paper,
               'ground': ground_y, 'ground_source': ground_source, 'lines': len(lines),
               'vertical_lines': sum(1 for p in lines if p[0] == p[2]), 'vertical_min': vertical_min,
+              'extra_lines': len(extra),
               'alpha_range': [int(rgba[:, :, 3].min()), int(rgba[:, :, 3].max())]}
     # Lokale Pfade nur auf der Konsole ausgeben, nicht in die veröffentlichbare Vorschau schreiben.
     report = {k: v for k, v in result.items() if k != 'output'}

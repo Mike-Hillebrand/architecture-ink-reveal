@@ -22,6 +22,7 @@ python3 /absolut/zum/skill/scripts/build_preview.py \
 | `--background '#f5f2e9'` | Papierfarbe der Browserzeichnung |
 | `--horizontal-min 70` / `--vertical-min` | Mindestlänge in Quellpixeln; senkrecht standardmäßig 3 % der Bildhöhe (mind. 24 px), damit auch Fensterprofile erkannt werden |
 | `--ground-y 840` | Geprüfte Bodenposition manuell angeben |
+| `--extra-lines kanten.json` | Schräge Kanten (Stützen, Dachschrägen) als `[[x1,y1,x2,y2], …]` in Quellpixeln ergänzen. Kanten im vergrößerten Ausschnitt messen und als Überlagerung prüfen, bevor gebaut wird. JSON im Projekt ablegen. |
 | `--title` / `--subtitle` | Texte außerhalb des Motivs |
 
 Vorhandene Projektordner nicht überschreiben. Erst Starter separat erzeugen und dann integrieren. Konfiguration und Metadaten enthalten keine lokalen privaten Quellpfade. Quellbild wird unverändert mitkopiert. Farbige Bilder nicht stillschweigend entsättigen; zuerst klären, ob eine monochrome Interpretation gewünscht ist.
