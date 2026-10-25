@@ -69,11 +69,21 @@ Den Ordner `architecture-ink-reveal/` in dein Codex-Skills-Verzeichnis kopieren.
 | `--duration 12` | Dauer in Sekunden |
 | `--loop` | Endlosschleife |
 | `--ground-y 759` | Bodenlinie von Hand setzen, wenn sie nicht erkannt wird |
+| `--vertical-min 30` | Mindestlänge senkrechter Linien (Standard: 3 % der Bildhöhe) |
+
+## Als Video für Reels / TikTok
+
+```bash
+npm i playwright-core
+node ~/.claude/skills/architecture-ink-reveal/scripts/capture_frames.js http://127.0.0.1:8766/ ./frames 30 12000
+```
+
+Das Skript nimmt die Animation Frame für Frame auf. Den Schnitt auf 9:16 mit ffmpeg (Texte, Musik, Lautheit) beschreibt [`references/video-export.md`](architecture-ink-reveal/references/video-export.md). Voraussetzung: Google Chrome und ffmpeg.
 
 ## Grenzen
 
-- Die Linienerkennung findet waagrechte und senkrechte Kanten. Kurven und Bäume kommen über die Tusche-Ebene, nicht als Vektor.
-- Eine Browseranimation ist kein Video. Für Reels/TikTok die Animation aufnehmen und exportieren.
+- Die Linienerkennung findet waagrechte und senkrechte Kanten. Kurven, schräge Stützen und Bäume kommen über die Tusche-Ebene, nicht als Vektor.
+- Eine Browseranimation ist kein Video. Für Reels/TikTok `capture_frames.js` und ffmpeg nutzen (siehe oben).
 - Bildgeneratoren halten „streng orthogonal“ nicht immer ein. Das Ergebnis immer ansehen.
 
 ## Lizenz

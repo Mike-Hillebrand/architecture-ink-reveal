@@ -20,7 +20,7 @@ python3 /absolut/zum/skill/scripts/build_preview.py \
 | `--paper 243` | Papierhelligkeit manuell, sonst 93. Perzentil |
 | `--ink 17` | Neutraler Tintenkanal 0–64; 17 = #111111 |
 | `--background '#f5f2e9'` | Papierfarbe der Browserzeichnung |
-| `--horizontal-min 70` / `--vertical-min 90` | Mindestlänge in Quellpixeln |
+| `--horizontal-min 70` / `--vertical-min` | Mindestlänge in Quellpixeln; senkrecht standardmäßig 3 % der Bildhöhe (mind. 24 px), damit auch Fensterprofile erkannt werden |
 | `--ground-y 840` | Geprüfte Bodenposition manuell angeben |
 | `--title` / `--subtitle` | Texte außerhalb des Motivs |
 
@@ -52,7 +52,7 @@ long_h = cv2.morphologyEx(ink, cv2.MORPH_OPEN,
 
 Lange Linien können auch Schalungsfugen, Schatten und Mobiliar sein. Unterbrochene/geneigte Kanten fehlen eventuell. Kontrolliere Vektoroverlay und Perspektivfreiheit separat. Gewünschte schräge Bauteile mit passenden Pfaden erhalten.
 
-`ground` ist null, wenn im unteren Bildband keine ausreichend lange Bodenlinie gefunden wird. Automatisch ermittelte und manuell vorgegebene Bodenlinien werden unterschieden. `width - 1` ist der letzte Pixelindex. Nenne gemessene Werte als Messwerte, nie als ursprüngliche Gestaltungsvorgabe.
+Die Bodenerkennung sucht zwischen 45 und 97 % der Bildhöhe die Zeile mit den meisten dunklen Pixeln (Grauwert < 120), die mindestens 55 % der Breite bedeckt und 85 % der Breite überspannt. Lange Gebäudekanten (Balkenunterseiten, Dachränder) fallen so meist heraus. `ground` ist null, wenn keine solche Zeile gefunden wird, etwa bei einem schrägen Hang. Automatisch ermittelte und manuell vorgegebene Bodenlinien werden unterschieden. `width - 1` ist der letzte Pixelindex. Nenne gemessene Werte als Messwerte, nie als ursprüngliche Gestaltungsvorgabe.
 
 ## Ablauf
 

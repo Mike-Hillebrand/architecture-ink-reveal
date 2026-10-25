@@ -19,7 +19,7 @@ Lies [references/abfrage.md](references/abfrage.md). Nutze die vollständige Abf
 
 ## 2. Zeichnung erstellen oder übernehmen
 
-Lies [references/umsetzung.md](references/umsetzung.md). Für neue Bilder nutze den verfügbaren `imagegen`-Skill und dessen Bildwerkzeug, keine programmatisch erfundene Ersatzillustration. Bestehende Zeichnungen als unveränderte Quellen übernehmen; die technische Aufbereitung erzeugt nur Animationsdaten und eine transparente Tintenebene.
+Lies [references/umsetzung.md](references/umsetzung.md). Für neue Bilder nutze den verfügbaren `imagegen`-Skill oder ein anderes eingebundenes Bildwerkzeug (z. B. ein lokales Modell wie Qwen Image per MCP), keine programmatisch erfundene Ersatzillustration. Lokale Modelle brauchen für 1536 × 1024 mehrere Minuten; im Hintergrund warten statt eng abzufragen. Bestehende Zeichnungen als unveränderte Quellen übernehmen; die technische Aufbereitung erzeugt nur Animationsdaten und eine transparente Tintenebene.
 
 Speichere bei Generierung den tatsächlich verwendeten Prompt als `drawing.prompt`. Halte Ansicht, Geschosse, Bauteile, Umgebung, Format, Farbigkeit und Ausschlüsse fest. Streng orthogonale Frontansicht bedeutet: keine perspektivischen Seitenflächen, verjüngten Finnen oder schrägen Untersichten. Diagonale Schlagschatten und Äste sind erlaubt. Kontrolliere das Ergebnis visuell und korrigiere konkrete Abweichungen gezielt.
 
@@ -33,7 +33,7 @@ Der Starter in `assets/browser-template/` kombiniert normalisierte SVG-Linien mi
 python3 /absolut/zum/skill/scripts/build_preview.py --image /absolut/zeichnung.png --output /absolut/neues-projekt --title "Beton, Linie für Linie." --duration 12
 ```
 
-Der Helfer braucht Pillow und NumPy. Optionen und Grenzen stehen in der Umsetzungsreferenz. Passe Starter und Texte an das Briefing an; projektspezifische Änderungen bleiben außerhalb des Skillordners. Bei Websiteintegration deren Vorgaben und Komponenten beachten. Keine globalen `line`- oder Canvas-Regeln überschreiben. Keine Bildgenerierung durch einen Shell-Unterprozess starten und keine API-Schlüssel für das integrierte Bildwerkzeug verlangen.
+Der Helfer braucht Pillow und NumPy. Nicht mit `python3 -I` starten, sonst fehlen die User-Site-Pakete. Optionen und Grenzen stehen in der Umsetzungsreferenz. Den Bericht prüfen: Bei `"ground": null` oder auffällig wenigen `vertical_lines` die Zeichnung ansehen, die Bodenlinie messen und gezielt mit `--ground-y` bzw. `--vertical-min` neu in einen leeren Ordner bauen. Schräger Hang ohne waagerechte Linie: keine Bodenlinie erzwingen. Passe Starter und Texte an das Briefing an; projektspezifische Änderungen bleiben außerhalb des Skillordners. Bei Websiteintegration deren Vorgaben und Komponenten beachten. Keine globalen `line`- oder Canvas-Regeln überschreiben. Keine Bildgenerierung durch einen Shell-Unterprozess starten und keine API-Schlüssel für das integrierte Bildwerkzeug verlangen.
 
 Technische Invarianten:
 
@@ -50,4 +50,4 @@ Starte einen lokalen HTTP-Server am Ausgabeordner und öffne die URL mit einem B
 
 Prüfe einen frühen Frame, Zwischenstand und Endbild, dazu Pause, Neustart, Scrubbing und gegebenenfalls Loop. Kontrolliere Bildladen, Laufzeitfehler, vollständige Endzeichnung, Linienausrichtung, echte Alpha-Ebene und schmale Viewports. Vergleiche das tatsächliche Endbild mit der Quelle. Ein erfolgreicher HTTP-Status allein bestätigt die Animation nicht.
 
-Nenne abschließend Browser-URL, Projektpfad, umgesetzten Umfang und relevante Grenzen. Eine Browseranimation ist noch kein MP4: Videoexport erfordert eine tatsächlich erzeugte und geprüfte Videodatei. Kein Deployment ohne entsprechenden Auftrag.
+Nenne abschließend Browser-URL, Projektpfad, umgesetzten Umfang und relevante Grenzen. Eine Browseranimation ist noch kein MP4: Videoexport erfordert eine tatsächlich erzeugte und geprüfte Videodatei. Für Reels/TikTok/Shorts [references/video-export.md](references/video-export.md) lesen und `scripts/capture_frames.js` nutzen. Kein Deployment ohne entsprechenden Auftrag.

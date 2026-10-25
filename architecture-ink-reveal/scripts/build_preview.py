@@ -46,7 +46,7 @@ def main():
     parser.add_argument('--ink', type=int, default=17)
     parser.add_argument('--background', default='#f5f2e9')
     parser.add_argument('--horizontal-min', type=int, default=70)
-    parser.add_argument('--vertical-min', type=int, default=90)
+    parser.add_argument('--vertical-min', type=int, help='Standard: 3 %% der Bildhöhe, mindestens 24 px')
     parser.add_argument('--ground-y', type=int)
     args = parser.parse_args()
     if not (0.5 <= args.duration <= 600):
@@ -55,7 +55,7 @@ def main():
         parser.error('--ink muss zwischen 0 und 64 liegen.')
     if args.paper is not None and not 5 <= args.paper <= 255:
         parser.error('--paper muss zwischen 5 und 255 liegen.')
-    if min(args.horizontal_min, args.vertical_min) < 2:
+    if min(args.horizontal_min, args.vertical_min or 2) < 2:
         parser.error('Mindestlinienlängen müssen mindestens 2 Pixel betragen.')
     if not re.fullmatch(r'#[0-9a-fA-F]{6}', args.background):
         parser.error('--background muss eine sechsstellige Hexfarbe sein.')
@@ -91,12 +91,17 @@ def main():
     binary = gray < (mean-25)
     ground_y, ground_source = args.ground_y, 'manual' if args.ground_y is not None else None
     if ground_y is None:
-        band = np.arange(int(h*.65), min(h, int(h*.95)+1))
-        lengths = (gray[band] < 100).sum(axis=1)
+        # Bodenlinien liegen in der Praxis zwischen ca. 70 und 90 % der Höhe; das Band ist bewusst breiter.
+        band = np.arange(int(h*.45), min(h, int(h*.97)+1))
+        dark = gray[band] < 120
+        # Gebäudekanten sind oft lang, überspannen aber selten fast die ganze Bildbreite wie eine Bodenlinie.
+        span = np.where(dark.any(1), w-1-np.argmax(dark[:, ::-1], 1)-np.argmax(dark, 1), 0)
+        lengths = np.where(span >= .85*w, dark.sum(1), 0)
         index = int(np.argmax(lengths))
-        if lengths[index] >= .6*w:
+        if lengths[index] >= .55*w:
             ground_y, ground_source = int(band[index]), 'detected'
-    lines = extract(binary, args.horizontal_min) + extract(binary.T, args.vertical_min, True)
+    vertical_min = args.vertical_min or max(24, round(h*.03))
+    lines = extract(binary, args.horizontal_min) + extract(binary.T, vertical_min, True)
     lines = [list(p) for p in lines if not (ground_y is not None and p[1] == p[3] and abs(p[1]-ground_y) < 5)]
     lines.sort(key=lambda p: (min(p[1], p[3]), p[0]))
     metadata = {'w': w, 'h': h, 'v': hashlib.sha256(source.read_bytes()).hexdigest()[:8],
@@ -115,6 +120,7 @@ def main():
     (output / 'config.js').write_text('window.ARCHITECTURE_CONFIG = '+json.dumps(config, ensure_ascii=False)+';\n', encoding='utf-8')
     result = {'output': str(output), 'width': w, 'height': h, 'paper': paper,
               'ground': ground_y, 'ground_source': ground_source, 'lines': len(lines),
+              'vertical_lines': sum(1 for p in lines if p[0] == p[2]), 'vertical_min': vertical_min,
               'alpha_range': [int(rgba[:, :, 3].min()), int(rgba[:, :, 3].max())]}
     (assets / 'report.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
     print(json.dumps(result, ensure_ascii=False))
